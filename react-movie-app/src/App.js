@@ -21,7 +21,7 @@ function App() {
   }, [counter]); // counter가 변할 때만 실행됨
   useEffect(() => {
     console.log("I run when 'keyword & counter' changes.");
-  }, [keyword, counter]); // 두 개의 state가 변할 때
+  }, [keyword, counter]); // 두 중 하나의 state가 변할 때
   return (
     <div>
       <input type="text" value={keyword} onChange={onChange} placeholder='Search here...'></input>
