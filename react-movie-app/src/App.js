@@ -23,7 +23,13 @@ function App() {
       />
       <button>Add To Do</button>
     </form>
-  </div>
+    <hr />
+    <ul>
+      {toDos.map((item, index) =>
+      (<li key={index}>{item}</li>
+      ))}
+    </ul >
+  </div >
 
   );
 }
