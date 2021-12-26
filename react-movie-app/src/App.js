@@ -2,47 +2,40 @@ import { useEffect, useState } from "react";
 
 function App() {
   const [loading, setLoading] = useState(true);
-  const [coins, setCoins] = useState([]);
-  const [currency, setCurrency] = useState();
-  const [value, setValue] = useState(0);
+  const [movies, setMovies] = useState([]);
+  const getMovies = async () => {
+    const json = await (
+      await fetch(
+        "https://yts.mx/api/v2/list_movies.json?minimum_rating=8.8&sort_by=year"
+      )
+    ).json();
+    setMovies(json.data.movies);
+    setLoading(false);
+  };
   useEffect(() => {
-    fetch("https://api.coinpaprika.com/v1/tickers")
-      .then((response) => response.json())
-      .then((json) => {
-        setCoins(json);
-        setLoading(false);
-      });
-  }, [])
-  const onChange = (event) => {
-    setValue(event.target.value);
-  }
-  const onSelect = (event) => {
-    setCurrency(event.target.value);
-  }
-  return (
-    <div>
-      <h1>The Coins! {loading ? "" : `(${coins.length})`}</h1>
-      {loading ?
-        (<strong>Loading...</strong>) :
-        (<div>
-          <select value={currency} onChange={onSelect}>
-            <option>Select currency</option>
-            {coins.map((coin) => (
-              <option key={coin.id} value={coin.quotes.USD.price}>
-                {coin.name} ({coin.symbol})
-              </option>
-            ))}
-          </select>
-          <div>
-            <input type="text" placeholder="Write value" onChange={onChange} />
-            <h3>{currency ? value / currency : 0}</h3>
+    getMovies()
+  }, []);
+  return <div>
+    {loading ? (
+      <h1>Loading...</h1>
+    ) : (
+      <div>
+        {movies.map((movie) => (
+          <div key={movie.id}>
+            <img src={movie.medium_cover_image} />
+            <h2>{movie.title}</h2>
+            <p>{movie.summary}</p>
+            <ul>
+              {movie.genres.map((g) => (
+                <li key={g}>{g}</li>
+              )
+              )}
+            </ul>
           </div>
-        </div>)
-      }
-
-
-    </div>
-  );
+        ))}
+      </div>
+    )}
+  </div>;
 }
 
 export default App;
